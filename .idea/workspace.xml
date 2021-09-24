@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6c6c1e49-490d-49ab-9538-3843ece2a6d2" name="Default Changelist" comment="Promise Chain">
+    <list default="true" id="6c6c1e49-490d-49ab-9538-3843ece2a6d2" name="Default Changelist" comment="async await&#10;&#10;&#10;- async await 는 promise 객체의 성공 실패의 값  .then .catch 를 사용하지 않고 편하게 사용할 수 있게 해준다.&#10;- try, catch 를 사용하여 .catch 를 사용 가능, error 도 쉽게 잡아줄 수 있다.">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/promise.js" beforeDir="false" afterPath="$PROJECT_DIR$/promise.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +70,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1632458847478</updated>
-      <workItem from="1632458848606" duration="11267000" />
+      <workItem from="1632458848606" duration="11436000" />
     </task>
     <task id="LOCAL-00001" summary="User GET &amp; POST API 생성">
       <created>1632462653999</created>
@@ -107,7 +107,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632472864467</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="async await&#10;&#10;&#10;- async await 는 promise 객체의 성공 실패의 값  .then .catch 를 사용하지 않고 편하게 사용할 수 있게 해준다.&#10;- try, catch 를 사용하여 .catch 를 사용 가능, error 도 쉽게 잡아줄 수 있다.">
+      <created>1632473520425</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1632473520425</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -130,6 +137,7 @@
     <MESSAGE value="callback 이란?" />
     <MESSAGE value="promise 란?" />
     <MESSAGE value="Promise Chain" />
-    <option name="LAST_COMMIT_MESSAGE" value="Promise Chain" />
+    <MESSAGE value="async await&#10;&#10;&#10;- async await 는 promise 객체의 성공 실패의 값  .then .catch 를 사용하지 않고 편하게 사용할 수 있게 해준다.&#10;- try, catch 를 사용하여 .catch 를 사용 가능, error 도 쉽게 잡아줄 수 있다." />
+    <option name="LAST_COMMIT_MESSAGE" value="async await&#10;&#10;&#10;- async await 는 promise 객체의 성공 실패의 값  .then .catch 를 사용하지 않고 편하게 사용할 수 있게 해준다.&#10;- try, catch 를 사용하여 .catch 를 사용 가능, error 도 쉽게 잡아줄 수 있다." />
   </component>
 </project>
