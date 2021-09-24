@@ -1,10 +1,17 @@
 const express = require('express');
-const app = express()
+const app = express();
 
-app.get('/', (req, res)=>{
-  return res.send('hello world1111')
-})
+const users = [];
 
-app.listen(3000, ()=>{
-  console.log('server listening on port 3000')
-})
+app.get('/user', (req, res) => {
+  return res.send({ users: users });
+});
+
+app.post('/user', (req, res) => {
+  uesrs.push({ name: 'how', age: 26 })
+  return res.send({ success: true });
+});
+
+app.listen(3000, () => {
+  console.log('server listening on port 3000');
+});
