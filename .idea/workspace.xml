@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6c6c1e49-490d-49ab-9538-3843ece2a6d2" name="Default Changelist" comment="callback 이란?">
-      <change afterPath="$PROJECT_DIR$/promise.js" afterDir="false" />
+    <list default="true" id="6c6c1e49-490d-49ab-9538-3843ece2a6d2" name="Default Changelist" comment="promise 란?">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callback.js" beforeDir="false" afterPath="$PROJECT_DIR$/callback.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/promise.js" beforeDir="false" afterPath="$PROJECT_DIR$/promise.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +71,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1632458847478</updated>
-      <workItem from="1632458848606" duration="10119000" />
+      <workItem from="1632458848606" duration="10656000" />
     </task>
     <task id="LOCAL-00001" summary="User GET &amp; POST API 생성">
       <created>1632462653999</created>
@@ -93,7 +94,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632472021704</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="promise 란?">
+      <created>1632472433387</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1632472433387</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,6 +122,7 @@
     <MESSAGE value="User GET &amp; POST API 생성" />
     <MESSAGE value="Express Middleware 사용" />
     <MESSAGE value="callback 이란?" />
-    <option name="LAST_COMMIT_MESSAGE" value="callback 이란?" />
+    <MESSAGE value="promise 란?" />
+    <option name="LAST_COMMIT_MESSAGE" value="promise 란?" />
   </component>
 </project>

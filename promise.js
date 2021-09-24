@@ -7,6 +7,7 @@ const addSum = (a, b) => {
   });
 };
 
-addSum(10, 'sum')
-  .then((sum) => console.log({ sum }))
+addSum(10, 20)
+  .then((sum1) => addSum(sum1, 30))
+  .then((sum2) => console.log({ sum2 }))
   .catch((error) => console.log({ error }));
