@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
 const { User } = require('./models/User');
 const { URI } = require('../mongo_db_uri');
 
@@ -16,8 +16,15 @@ const server = async () => {
 
     app.use(express.json());
 
-    app.get('/user', (req, res) => {
-      return res.send({  });
+    app.get('/user', async (req, res) => {
+      try {
+        // .find => 배열을 리턴, .findOne => 값 하나를 리턴
+        const users = await User.find({});
+        return res.send({ users });
+      } catch (err) {
+        console.log(err);
+        return res.status(500).send({ err: err.message });
+      }
     });
 
     app.post('/user', async (req, res) => {

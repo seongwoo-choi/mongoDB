@@ -9,9 +9,8 @@ const UserSchema = new Schema({
   },
   age: Number,
   email: String,
-  // 생성된 시간이 나타나고 수정된 시간이 몇 시 인지 나타난다.
 }, { timestamps: true });
 
-// user 라는 컬렉션을 만들 것이고 형태는 UserSchema 형태를 가진다.
 const User = model('user', UserSchema);
+
 module.exports = { User };
