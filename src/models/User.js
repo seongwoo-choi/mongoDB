@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
+const { Schema, model } = require('mongoose')
 
 // key: value 의 정보를 표시해주는 Schema
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   username: { type: String, required: true },
   name: {
     first: { type: String, required: true },
@@ -13,5 +13,5 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // user 라는 컬렉션을 만들 것이고 형태는 UserSchema 형태를 가진다.
-const User = mongoose.model('user', UserSchema);
+const User = model('user', UserSchema);
 module.exports = { User };
