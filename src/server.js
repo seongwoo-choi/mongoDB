@@ -15,13 +15,26 @@ const server = async () => {
     console.log('MongoDB connected');
 
     // middleWare
-    app.use(express.json())
+    app.use(express.json());
 
     app.get('/user', async (req, res) => {
       try {
         // .find => 배열을 리턴, .findOne => 값 하나를 리턴
         const users = await User.find({});
         return res.send({ users });
+      } catch (err) {
+        console.log(err);
+        return res.status(500).send({ err: err.message });
+      }
+    });
+
+    app.get('/user/:userId', async (req, res) => {
+      try {
+        const { userId } = req.params;
+        // 오브젝트 id 형식에 맞는 값이면 true 아니면 false
+        if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ err: 'invalid userId' });
+        const user = await User.findOne({ _id: userId });
+        return res.send({ user });
       } catch (err) {
         console.log(err);
         return res.status(500).send({ err: err.message });
