@@ -17,6 +17,7 @@ const server = async () => {
     // middleWare
     app.use(express.json());
 
+    // DB 작업이 들어가는 경우 async 를 사용한다.
     app.get('/user', async (req, res) => {
       try {
         // .find => 배열을 리턴, .findOne => 값 하나를 리턴
@@ -54,6 +55,19 @@ const server = async () => {
         // DB에서 저장 완료가 되고나서 값이 리턴되게 하기 위해서 awit 을 사용
         await user.save();
 
+        return res.send({ user });
+      } catch (err) {
+        console.log(err);
+        return res.status(500).send({ err: err.message });
+      }
+    });
+
+    app.delete('/user/:userId', async (req, res) => {
+      try {
+        const { userId } = req.params;
+        if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ err: 'invalid userId' });
+        // findOneAndDelete => filter 에 해당하는 도큐먼트를 찾고 삭제한다. 삭제하기 전의 값을 user 에 저장하여 삭제한 값을 확인할 수 있다.
+        const user = await User.findOneAndDelete({ _id: userId });
         return res.send({ user });
       } catch (err) {
         console.log(err);
