@@ -75,6 +75,25 @@ const server = async () => {
       }
     });
 
+    app.put('/user/:userId', async (req, res) => {
+      try {
+        const { userId } = req.params;
+        if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ err: 'invalid userId' });
+        const { age } = req.body;
+        if (!age) return res.status(400).send({ err: 'age is required' });
+        if (typeof age != 'number') return res.status(400).send({ err: 'age must be a number' });
+
+        // key value 가 같아서 { $set: { age } } 로 간단하게 줄일 수 있다.
+        // filter => userId, update => { $set: { age: age } }, options => { new: true }
+        const user = await User.findByIdAndUpdate(userId, { $set: { age: age } }, { new: true });
+
+        return res.send({ user });
+      } catch (err) {
+        console.log(err);
+        return res.status(500).send({ err: err.message });
+      }
+    });
+
     app.listen(3000, () => console.log('server listening on port 3000'));
 
   } catch (err) {
