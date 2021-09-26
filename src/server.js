@@ -14,7 +14,8 @@ const server = async () => {
     });
     console.log('MongoDB connected');
 
-    app.use(express.json());
+    // middleWare
+    app.use(express.json())
 
     app.get('/user', async (req, res) => {
       try {
