@@ -12,6 +12,9 @@ const server = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+
+    // 쿼리들을 볼 수 있다.
+    mongoose.set('debug', true);
     console.log('MongoDB connected');
 
     // middleWare
@@ -79,14 +82,19 @@ const server = async () => {
       try {
         const { userId } = req.params;
         if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ err: 'invalid userId' });
-        const { age } = req.body;
-        if (!age) return res.status(400).send({ err: 'age is required' });
-        if (typeof age != 'number') return res.status(400).send({ err: 'age must be a number' });
+        const { age, name } = req.body;
+        if (!age && !name) return res.status(400).send({ error: 'age or name is required' });
+        if (age && typeof age != 'number') return res.status(400).send({ err: 'age must be a number' });
+        if (name && typeof name.first !== 'string' && typeof name.last !== 'string') return res.status(400).send({ error: 'firts and last name are string' });
+
+        // 이렇게 하는 이유? => age: age, name: name 으로 했을 경우엔 둘 중 하나의 값이 안들어왔을 경우 null 이 들어왔다고 처리를 하기 때문이다.
+        let updateBody = {};
+        if(age) updateBody.age = age;
+        if(name) updateBody.name = name;
 
         // key value 가 같아서 { $set: { age } } 로 간단하게 줄일 수 있다.
         // filter => userId, update => { $set: { age: age } }, options => { new: true }
-        const user = await User.findByIdAndUpdate(userId, { $set: { age: age } }, { new: true });
-
+        const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
         return res.send({ user });
       } catch (err) {
         console.log(err);
