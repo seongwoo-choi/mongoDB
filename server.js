@@ -1,25 +1,33 @@
 const express = require('express');
 const app = express();
+const { userRouter } = require('./src/routes/userRoute')
+const mongoose = require('mongoose');
+const { URI } = require('./mongo_db_uri');
 
-const users = [];
 
-app.use(express.json());
+const server = async () => {
+  try {
+    await mongoose.connect(URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-app.post('/', (req, res)=>{
-  users.push({name: req.body.name, age: req.body.age})
-  return res.send(users)
-})
+    // 쿼리들을 볼 수 있다.
+    mongoose.set('debug', true);
+    console.log('MongoDB connected');
 
-app.get('/user', function(req, res) {
-  return res.send({ users: users });
-});
+    // middleWare
+    app.use(express.json());
 
-app.post('/user', function(req, res) {
-  console.log(req.body);
-  users.push({ name: req.body.name, age: req.body.age });
-  return res.send({ sucess: req.body });
-});
+    // /user 로 시작하면 userRouter 로 연결한다.
+    app.use('/user', userRouter)
 
-app.listen(3000, () => {
-  console.log('server listening on port 3000');
-});
+    app.listen(3000, () => console.log('server listening on port 3000'));
+
+  } catch (err) {
+    console.log(err);
+  }
+
+};
+
+server();

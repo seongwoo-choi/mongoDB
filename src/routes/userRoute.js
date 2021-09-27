@@ -71,13 +71,24 @@ userRouter.put('/:userId', async (req, res) => {
     if (name && typeof name.first !== 'string' && typeof name.last !== 'string') return res.status(400).send({ error: 'firts and last name are string' });
 
     // 이렇게 하는 이유? => age: age, name: name 으로 했을 경우엔 둘 중 하나의 값이 안들어왔을 경우 null 이 들어왔다고 처리를 하기 때문이다.
-    let updateBody = {};
-    if (age) updateBody.age = age;
-    if (name) updateBody.name = name;
+    // let updateBody = {};
+    // if (age) updateBody.age = age;
+    // if (name) updateBody.name = name;
 
     // key value 가 같아서 { $set: { age } } 로 간단하게 줄일 수 있다.
     // filter => userId, update => { $set: { age: age } }, options => { new: true }
-    const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
+    // const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
+
+    // 주석처리 된 위의 코드와 동일하다. 차이점은 노드에서 User 객체를 만들어서 노드에서 자체적으로 로직을 처리하고 그 후에 서버로 값을 보내는 것
+    let user = await User.findById(userId);
+    // 업데이트 되기 전 user
+    console.log({ userBeforeEdit: user });
+    if (age) user.age = age;
+    if (name) user.name = name;
+    // 업데이트 된 user
+    console.log({ userAfterEdit: user });
+    await user.save();
+
     return res.send({ user });
   } catch (err) {
     console.log(err);
@@ -86,5 +97,6 @@ userRouter.put('/:userId', async (req, res) => {
 });
 
 module.exports = {
-  userRouter
-}
+  userRouter,
+};
+
