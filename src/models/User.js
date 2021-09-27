@@ -11,6 +11,7 @@ const UserSchema = new Schema({
   email: String,
 }, { timestamps: true });
 
+// 유저 컬렉션 이름 == user
 const User = model('user', UserSchema);
 
 module.exports = { User };
