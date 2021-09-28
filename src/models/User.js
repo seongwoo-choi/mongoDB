@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model } = require('mongoose');
 
 // key: value 의 정보를 표시해주는 Schema
 const UserSchema = new Schema({
@@ -14,6 +14,6 @@ const UserSchema = new Schema({
 }, { timestamps: true });
 
 // 유저 컬렉션 이름 == user
-const User = model('user', UserSchema);
+const User = model('users', UserSchema);
 
 module.exports = { User };
