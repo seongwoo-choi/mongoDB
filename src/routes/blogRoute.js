@@ -8,6 +8,7 @@ blogRouter.post('/', async (req, res) => {
   try {
     const { title, content, islive, userId } = req.body;
 
+    // title, content 는 required=true 여서 자동으로 validation 이 된다.
     if (typeof title !== 'string') return res.status(400).send({ err: 'title is required' });
     if (typeof content !== 'string') return res.status(400).send({ err: 'content is required' });
     if (!isValidObjectId(userId)) return res.status(400).send({ err: 'userId is invalid' });
@@ -29,7 +30,21 @@ blogRouter.post('/', async (req, res) => {
 
 blogRouter.get('/', async (req, res) => {
   try {
-    const {userId} = req.params;
+    const blogs = await Blog.find();
+    return res.send({ blogs });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ err: err.message });
+  }
+});
+
+blogRouter.get('/:blogId', async (req, res) => {
+  try {
+    const { blogId } = req.params;
+    if (!isValidObjectId(blogId)) return res.status(400).send({ err: 'blogId is invalid' });
+    // const blog = await Blog.findOne({ _id: blogId });
+    const blog = await Blog.findById(blogId);
+    return res.send({ blog });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ err: err.message });
@@ -39,7 +54,15 @@ blogRouter.get('/', async (req, res) => {
 // put 은 블로그 전체적인 것을 수정할 때 사용
 blogRouter.put('/:blogId', async (req, res) => {
   try {
+    const { blogId } = req.params;
+    const { title, content } = req.body;
+    if (!isValidObjectId(blogId)) return res.status(400).send({ err: 'blogId is invalid' });
+    if (typeof title !== 'string') return res.status(400).send({ err: 'title is required' });
+    if (typeof content !== 'string') return res.status(400).send({ err: 'content is required' });
 
+    const blog = await Blog.findOneAndUpdate({ _id: blogId }, { title, content });
+
+    return res.send({ blog });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ err: err.message });
@@ -49,7 +72,14 @@ blogRouter.put('/:blogId', async (req, res) => {
 // 특정 부분을 수정할 때 patch 사용
 blogRouter.patch('/:blogId/live', async (req, res) => {
   try {
+    const { blogId } = req.params;
+    if (!isValidObjectId(blogId)) return res.status(400).send({ err: 'blogId is invalid' });
 
+    const { islive } = req.body;
+    if (typeof islive !== 'boolean') return res.status(400).send({ err: 'islive must be a boolean' });
+
+    const blog = await Blog.findByIdAndUpdate(blogId, { islive }, { new: true });
+    return res.send({ blog });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ err: err.message });
