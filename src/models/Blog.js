@@ -14,4 +14,5 @@ const BlogSchema = new Schema({
 
 // blog 컬렉션을 생성하고 Blog 에 값을 초기화한다.
 const Blog = model('blog', BlogSchema);
+
 module.exports = { Blog };
