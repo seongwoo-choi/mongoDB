@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
-const { userRouter } = require('./src/routes/userRoute')
+const { userRouter } = require('./src/routes/userRoute');
+const { blogRouter } = require('./src/routes/blogRoute');
 const mongoose = require('mongoose');
 const { URI } = require('./mongo_db_uri');
-
 
 const server = async () => {
   try {
@@ -20,7 +20,8 @@ const server = async () => {
     app.use(express.json());
 
     // /user 로 시작하면 userRouter 로 연결한다.
-    app.use('/user', userRouter)
+    app.use('/user', userRouter);
+    app.use('/blog', blogRouter);
 
     app.listen(3000, () => console.log('server listening on port 3000'));
 

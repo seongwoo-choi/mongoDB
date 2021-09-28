@@ -9,6 +9,8 @@ const UserSchema = new Schema({
   },
   age: Number,
   email: String,
+
+  // 도큐먼트가 생성되고 수정되면 자동으로 timestamps 를 찍어준다.
 }, { timestamps: true });
 
 // 유저 컬렉션 이름 == user
