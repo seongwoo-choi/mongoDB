@@ -1,8 +1,6 @@
 const { Router } = require('express');
 const { isValidObjectId } = require('mongoose');
-const { Blog } = require('../models/Blog');
-const { User } = require('../models/User');
-const { Comment } = require('../models/Comment');
+const { Blog, User, Comment } = require('../models');
 
 // server 에서 app.use('/blog/:blogId/comment', commentRouter); OR blogRoute 에서 blogRouter.use('/:blogId/comment', commentRouter)
 // http://localhost:3000/blog/123/comment/456 ==> mergeParams: true 를 통해 blogId: 123, commentId: 456 이 찍히게 된다.

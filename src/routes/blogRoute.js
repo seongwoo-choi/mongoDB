@@ -2,8 +2,7 @@ const { Router } = require('express');
 const blogRouter = Router();
 const { commentRouter } = require('./commentRoute');
 const { isValidObjectId } = require('mongoose');
-const { User } = require('../models/User');
-const { Blog } = require('../models/Blog');
+const { User, Blog } = require('../models');
 
 blogRouter.use('/:blogId/comment', commentRouter);
 

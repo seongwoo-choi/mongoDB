@@ -1,8 +1,6 @@
 const express = require('express');
 const app = express();
-const { userRouter } = require('./src/routes/userRoute');
-const { blogRouter } = require('./src/routes/blogRoute');
-const { commentRouter } = require('./src/routes/commentRoute');
+const { userRouter, blogRouter, commentRouter } = require('./src/routes');
 const mongoose = require('mongoose');
 const { URI } = require('./mongo_db_uri');
 
