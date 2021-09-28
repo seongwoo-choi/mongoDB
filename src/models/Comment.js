@@ -1,10 +1,17 @@
-const { Schema, model, Types: { ObjectId } } = require('mongoose');
+const {
+    Schema,
+    model,
+    Types: { ObjectId },
+} = require('mongoose');
 
-const CommentSchema = new Schema({
-  content: { type: String, required: true },
-  user: { type: ObjectId, required: true, ref: 'user' },
-  blog: { type: ObjectId, required: true, ref: 'blog' },
-}, { timestamps: true });
+const CommentSchema = new Schema(
+    {
+        content: { type: String, required: true },
+        user: { type: ObjectId, required: true, ref: 'user' },
+        blog: { type: ObjectId, required: true, ref: 'blog' },
+    },
+    { timestamps: true },
+);
 
 const Comment = model('comments', CommentSchema);
 
