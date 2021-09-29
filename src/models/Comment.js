@@ -7,8 +7,8 @@ const {
 const CommentSchema = new Schema(
     {
         content: { type: String, required: true },
-        user: { type: ObjectId, required: true, ref: 'user' },
-        blog: { type: ObjectId, required: true, ref: 'blog' },
+        user: { type: ObjectId, required: true, ref: 'users' },
+        blog: { type: ObjectId, required: true, ref: 'blogs' },
     },
     { timestamps: true },
 );

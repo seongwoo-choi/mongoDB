@@ -10,7 +10,7 @@ const BlogSchema = new Schema(
 
         // _id => ObjectId 타입, ref => 이 블로그의 user 가 어디를 참조하고 있는지 나타낸다. (User 컬렉션을 참조)
         // 외래키라고 생각하면 편할 것 같다.
-        user: { type: Types.ObjectId, required: true, ref: 'user' },
+        user: { type: Types.ObjectId, required: true, ref: 'users' },
     },
     { timestamps: true },
 );

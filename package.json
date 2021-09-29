@@ -16,7 +16,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node src/server.js",
-        "dev": "nodemon  --ignore client.js src/server.js",
+        "dev": "nodemon  --ignore src/client.js src/server.js",
         "client": "nodemon src/client.js"
     },
     "author": "seongwoo",

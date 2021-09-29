@@ -12,10 +12,8 @@ const server = async () => {
             useUnifiedTopology: true,
         });
 
-        //
-
         // 쿼리들을 볼 수 있다.
-        // mongoose.set('debug', true);
+        mongoose.set('debug', true);
 
         // 유저 갯수 / 블로그 갯수 / 후기 갯수
         // await generateFakeData(100, 10, 300)
