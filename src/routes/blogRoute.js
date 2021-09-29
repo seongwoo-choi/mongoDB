@@ -25,7 +25,7 @@ blogRouter.post('/', async (req, res) => {
 
         // Blog 의 user는 user 컬렉션을 참조하고 있기 때문에 user 모델을 값으로 받을 수 있다.
         // user 객체가 blog 에 들어있다.
-        let blog = new Blog({ ...req.body, user });
+        let blog = new Blog({ ...req.body, user: user.toObject() });
         await blog.save();
 
         return res.send({ blog });
