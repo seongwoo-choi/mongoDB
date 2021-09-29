@@ -4,11 +4,15 @@ console.log('client code running!');
 // rest API 호출할 때 자주 쓰는 모듈
 const axios = require('axios');
 
+const URI = 'http://localhost:3000';
+
 const test = async () => {
     //  get 요청으로 blogs 를 가져온다.
     let {
         data: { blogs },
-    } = await axios.get('http://localhost:3000/blog');
+    } = await axios.get(`${URI}/blog`);
+
+    // console.log(blogs[0]);
 
     // blogs 재정의
     blogs = await Promise.all(
@@ -16,17 +20,30 @@ const test = async () => {
         blogs.map(async (blog) => {
             // await 를 사용해서 res1, res2 순차적으로 실행이 된다.
             // user 에서 userId 로 get 조회 => blog 에 ref 로 user 를 참조하고 있기 때문에 blog.user 로 userId 를 사용
-            const res1 = await axios.get(`http://localhost:3000/user/${blog.user}`);
             // blog 에서 blog._id 로 comment get 조회 => comment 를 조회할 때는 blog 의 id 가 필수이다.
-            const res2 = await axios.get(`http://localhost:3000/blog/${blog._id}/comment`);
+            // axios 는 promise 를 리턴한다. 배열로 값을 받고 배열 디스트럭쳐링을 한다.
+            const [res1, res2] = await Promise.all([
+                axios.get(`${URI}/user/${blog.user}`),
+                axios.get(`${URI}/blog/${blog._id}/comment`),
+            ]);
 
             blog.user = res1.data.user;
-            blog.comments = res2.data.comments;
+
+            // 비동기적으로 코멘트를 하나하나 순차적으로 담을 것
+            blog.comments = await Promise.all(
+                res2.data.comments.map(async (comment) => {
+                    const {
+                        data: { user },
+                    } = await axios.get(`${URI}/user/${comment.user}`);
+                    comment.user = user;
+                    return comment;
+                }),
+            );
             return blog;
         }),
     );
 
-    console.log(blogs[0]);
+    console.dir(blogs[0], { depth: 10 });
 };
 
 // "dev": "nodemon  --ignore client.js src/server.js" => client 파일이 수정된 것을 무시한다.
