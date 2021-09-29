@@ -34,8 +34,8 @@ blogRouter.post('/', async (req, res) => {
 
 blogRouter.get('/', async (req, res) => {
     try {
-        // Blog 데이터베이스에서 10개만 가져온다.
-        const blogs = await Blog.find({}).limit(10);
+        // Blog 데이터베이스에서 20개만 가져온다.
+        const blogs = await Blog.find({}).limit(20);
         return res.send({ blogs });
     } catch (err) {
         console.log(err);
