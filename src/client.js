@@ -12,7 +12,7 @@ const test = async () => {
     let {
         data: { blogs },
     } = await axios.get(`${URI}/blog`);
-    console.dir(blogs[0], { depth: 10 });
+    // console.dir(blogs[0], { depth: 10 });
 
     // console.log(blogs[0]);
 
@@ -55,6 +55,13 @@ const test = async () => {
 // 위와 같이 --ignore client.js 를 설정하지 않으면 오류가 발생하는데 se정rver.js 와 client.js 가 동시에 꺼졌다 동시에 켜지기 때문
 
 const testGroup = async () => {
+    await test();
+    await test();
+    await test();
+    await test();
+    await test();
+    await test();
+    await test();
     await test();
 };
 
