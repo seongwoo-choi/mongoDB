@@ -12,7 +12,7 @@ const test = async () => {
     let {
         data: { blogs },
     } = await axios.get(`${URI}/blog`);
-    console.log(blogs);
+    console.dir(blogs[0], { depth: 10 });
 
     // console.log(blogs[0]);
 
