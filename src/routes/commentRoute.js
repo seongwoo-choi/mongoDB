@@ -16,6 +16,7 @@ const { comment } = require('../models/Comment');
 commentRouter.post('/', async (req, res) => {
     try {
         const { blogId } = req.params;
+
         const { content, userId } = req.body;
         if (!isValidObjectId(blogId))
             return res.status(400).send({ err: 'blogId is invalid' });
@@ -38,7 +39,12 @@ commentRouter.post('/', async (req, res) => {
             return res.status(400).send({ err: 'blog is not avaliable' });
 
         // DB 에서 Comment 객체를 생성하여 node.js 에 생성
-        const comment = new Comment({ content, user, blog });
+        const comment = new Comment({
+            content,
+            user,
+            userFullName: `${user.name.first} ${user.name.last}`,
+            blog,
+        });
 
         // 읽기 작업을 빠르게 하기 위한 작업이다..
         await Promise.all([
