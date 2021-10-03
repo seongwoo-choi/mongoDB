@@ -4,7 +4,9 @@ const { commentRouter } = require('./commentRoute');
 const { isValidObjectId } = require('mongoose');
 const { User } = require('../models/User');
 const { Blog } = require('../models/Blog');
+const path = require('path');
 
+// blog/:blogId/comment => 미들웨어 처리
 blogRouter.use('/:blogId/comment', commentRouter);
 
 blogRouter.post('/', async (req, res) => {
@@ -24,7 +26,7 @@ blogRouter.post('/', async (req, res) => {
         if (!user) return res.status(400).send({ err: 'user dose not exist' });
 
         // Blog 의 user는 user 컬렉션을 참조하고 있기 때문에 user 모델을 값으로 받을 수 있다.
-        // user 객체가 blog 에 들어있다.
+        // findById 로 찾은 user 를 객체형태로 변환하여 Blog 모델의 속성값으로 넣었다.
         let blog = new Blog({ ...req.body, user: user.toObject() });
         await blog.save();
 
@@ -39,16 +41,15 @@ blogRouter.get('/', async (req, res) => {
     try {
         // Blog 데이터베이스에서 20개만 가져온다.
         // path: "user" => Blog 모델의 user 속성의 값을 채우라는 뜻(user _id 를 채우라는 것)
+        // .populate([{ path: 'user' }, { path: 'comments', populate: {path: user} }]);
         const blogs = await Blog.find({})
-            .limit(100)
-            // comments 속성을 Object id 를 가지고 객체로 치환 => comments 의 user 속성을 다시 객체로 치환
+            .limit(10)
             .populate([
                 { path: 'user' },
-                {
-                    path: 'comments',
-                    populate: { path: 'user' },
-                },
+                { path: 'comments', populate: { path: 'user' } },
             ]);
+        // populate => Object Id 를 그에 해당하는 객체로 치환해주는 함수이다.
+        // comments 속성을 Object id 를 가지고 객체로 치환 => comments 의 user 속성을 다시 객체로 치환
 
         return res.send({ blogs });
     } catch (err) {

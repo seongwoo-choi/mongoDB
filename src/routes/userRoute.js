@@ -33,14 +33,18 @@ userRouter.post('/', async (req, res) => {
     try {
         // 클라이언트가 필수값을 다 입력하지 않았을 경우 처리
         let { username, name } = req.body;
-        if (!username) return res.status(400).send({ err: 'username is required' });
+        if (!username)
+            return res.status(400).send({ err: 'username is required' });
         if (!name || !name.first || !name.last)
-            return res.status(400).send({ err: 'Both first and last names are required' });
+            return res
+                .status(400)
+                .send({ err: 'Both first and last names are required' });
 
         // req.body 가 User 스키마의 key 값이 모두 동일하다고 가정한다.
+        // user = { username:"", name: {first:"", last:""} } => 이렇게 저장.
         const user = new User(req.body);
 
-        // DB에서 저장 완료가 되고나서 값이 리턴되게 하기 위해서 awit 을 사용
+        // DB에서 저장 완료가 되고나서 값이 리턴되게 하기 위해서 await 을 사용
         await user.save();
 
         return res.send({ user });
@@ -70,11 +74,18 @@ userRouter.put('/:userId', async (req, res) => {
         if (!mongoose.isValidObjectId(userId))
             return res.status(400).send({ err: 'invalid userId' });
         const { age, name } = req.body;
-        if (!age && !name) return res.status(400).send({ error: 'age or name is required' });
+        if (!age && !name)
+            return res.status(400).send({ error: 'age or name is required' });
         if (age && typeof age != 'number')
             return res.status(400).send({ err: 'age must be a number' });
-        if (name && typeof name.first !== 'string' && typeof name.last !== 'string')
-            return res.status(400).send({ error: 'firts and last name are string' });
+        if (
+            name &&
+            typeof name.first !== 'string' &&
+            typeof name.last !== 'string'
+        )
+            return res
+                .status(400)
+                .send({ error: 'firts and last name are string' });
 
         // 이렇게 하는 이유? => age: age, name: name 으로 했을 경우엔 둘 중 하나의 값이 안들어왔을 경우 null 이 들어왔다고 처리를 하기 때문이다.
         // let updateBody = {};
