@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { User } = require('../models');
+const { User, Blog } = require('../models');
 const mongoose = require('mongoose');
 const userRouter = Router();
 
@@ -101,7 +101,15 @@ userRouter.put('/:userId', async (req, res) => {
         // 업데이트 되기 전 user
         console.log({ userBeforeEdit: user });
         if (age) user.age = age;
-        if (name) user.name = name;
+        if (name) {
+            user.name = name;
+            // Blog 스키마를 가져오고 필터링을 한다 => user 속성의 객체의 _id 가 userId 인 녀석들의 값을 가져오고
+            // 그 중에서 user 객체의 name 속성을 name 으로 변경하는데 하나만 변경하는 것이 아닌 전부 변경한다.
+            await Blog.updateMany(
+                { 'user._id': userId },
+                { 'user.name': name },
+            );
+        }
         // 업데이트 된 user
         console.log({ userAfterEdit: user });
         await user.save();

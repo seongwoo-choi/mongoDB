@@ -10,10 +10,19 @@ const BlogSchema = new Schema({
     islive: { type: Boolean, required: true, default: false },
 
     // user 속성을 생성 => type, ref 등 기타 옵션을 정의 => Types.ObjectId 와 users 컬렉션을 참조하고 있다는 것을 알려주고 populate 를 통해서 userId 의 실제 객체를 가져올 수 있도록 하게 했다.
+    // user: {
+    //     type: Types.ObjectId,
+    //     ref: 'users',
+    //     required: true,
+    // },
+
     user: {
-        type: Types.ObjectId,
-        ref: 'users',
-        required: true,
+        _id: { type: Types.ObjectId, required: true, ref: 'users' },
+        username: { type: String, required: true },
+        name: {
+            first: { type: String, required: true },
+            last: { type: String, required: true },
+        },
     },
 
     // 이런식으로 외부 스키마를 임포트해와서 넣어줄 수 있다.

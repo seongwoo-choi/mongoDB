@@ -95,6 +95,7 @@ commentRouter.patch('/:commentId', async (req, res) => {
         // comments._id => 자바스크립트 문법이 아닌 몽고디비 문법이다.
         // Blog 스키마 속성인 comments 의 배열 안에 _id 를 가지고 있는 객체를 찾는다는 뜻
         // comments.$.content => 필터링에 해당하는 아이디를 가지고 있는 객체의 content 값을 수정한다는 뜻
+        // $ 를 사용한 이유는 Blog 스키마에서 content 는 배열이기 때문에 특정값을 알기 위해선 인덱싱이 필요한데 그 역할을 $ 가 해준다.
         // blog 의 특정 후기의 id로 필터링하여 값을 찾고 찾아진 객체의 후기(커멘트)를 수정한다
         Blog.updateOne(
             { 'comments._id': commentId },
