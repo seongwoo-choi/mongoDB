@@ -3,7 +3,7 @@ const app = express();
 const { userRouter, blogRouter, commentRouter } = require('./routes');
 const mongoose = require('mongoose');
 const { URI } = require('../mongo_db_uri');
-const { generateFakeData } = require('../faker');
+const { generateFakeData } = require('../faker2');
 
 const server = async () => {
     try {
@@ -15,8 +15,6 @@ const server = async () => {
         // 쿼리들을 볼 수 있다.
         // mongoose.set('debug', true);
 
-        // 유저 갯수 / 블로그 갯수 / 후기 갯수
-        // await generateFakeData(100, 10, 300)
         console.log('MongoDB connected');
 
         // middleWare
@@ -28,7 +26,13 @@ const server = async () => {
 
         // app.use('/blog/:blogId/comment', commentRouter);
 
-        app.listen(3000, () => console.log('server listening on port 3000'));
+        app.listen(3000, async () => {
+            console.log('server listening on port 3000');
+            // 유저 갯수 / 블로그 갯수 / 후기 갯수
+            // for (let i = 0; i < 20; i++) {
+            //     await generateFakeData(10, 1, 10);
+            // }
+        });
     } catch (err) {
         console.log(err);
     }

@@ -42,12 +42,11 @@ blogRouter.get('/', async (req, res) => {
         // Blog 데이터베이스에서 20개만 가져온다.
         // path: "user" => Blog 모델의 user 속성의 값을 채우라는 뜻(user _id 를 채우라는 것)
         // .populate([{ path: 'user' }, { path: 'comments', populate: {path: user} }]);
-        const blogs = await Blog.find({})
-            .limit(10)
-            .populate([
-                { path: 'user' },
-                { path: 'comments', populate: { path: 'user' } },
-            ]);
+        const blogs = await Blog.find({}).limit(10);
+        // .populate([
+        //     { path: 'user' },
+        //     { path: 'comments', populate: { path: 'user' } },
+        // ]);
         // populate => Object Id 를 그에 해당하는 객체로 치환해주는 함수이다.
         // comments 속성을 Object id 를 가지고 객체로 치환 => comments 의 user 속성을 다시 객체로 치환
 
