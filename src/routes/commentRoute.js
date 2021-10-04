@@ -78,4 +78,31 @@ commentRouter.get('/', async (req, res) => {
     }
 });
 
+commentRouter.patch('/:commentId', async (req, res) => {
+    const { commentId } = req.params;
+    const { content } = req.body;
+
+    if (typeof content !== 'string')
+        return res.status(400).send({ err: 'content is required' });
+
+    const [comment] = await Promise.all([
+        Comment.findOneAndUpdate(
+            { _id: commentId },
+            { content: content },
+            { new: true },
+        ),
+
+        // comments._id => 자바스크립트 문법이 아닌 몽고디비 문법이다.
+        // Blog 스키마 속성인 comments 의 배열 안에 _id 를 가지고 있는 객체를 찾는다는 뜻
+        // comments.$.content => 필터링에 해당하는 아이디를 가지고 있는 객체의 content 값을 수정한다는 뜻
+        // blog 의 특정 후기의 id로 필터링하여 값을 찾고 찾아진 객체의 후기(커멘트)를 수정한다
+        Blog.updateOne(
+            { 'comments._id': commentId },
+            { 'comments.$.content': content },
+        ),
+    ]);
+
+    return res.send({ comment });
+});
+
 module.exports = { commentRouter };
