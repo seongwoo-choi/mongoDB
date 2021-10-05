@@ -106,4 +106,19 @@ commentRouter.patch('/:commentId', async (req, res) => {
     return res.send({ comment });
 });
 
+commentRouter.delete('/:commentId', async (req, res) => {
+    const { commentId } = req.params;
+    // Blog 모델에 외래키로 후기의 속성이 들어있기 때문에 블로그 모델에서도 후기를 삭제해줘야 한다.
+    const comment = await Comment.findOneAndDelete({ _id: commentId });
+    await Blog.updateOne(
+        { 'comments._id': commentId },
+        // {$elemMatch: { content:"hello", title: "world" } } ⇒ content, title 둘 의 값이 모두 일치할 때 명령이 실행되도록 할 수 있다.
+        // $elemMatch 를 사용하지 않으면 or 문으로 처리되어 명령이 실행된다.
+        // 그렇기 때문에 $pull 을 사용했다. $pull 은 배열에서 값을 삭제하는 명령어이다.
+        { $pull: { comments: { _id: commentId } } },
+    );
+
+    return res.send({ comment });
+});
+
 module.exports = { commentRouter };

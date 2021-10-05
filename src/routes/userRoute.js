@@ -98,7 +98,7 @@ userRouter.put('/:userId', async (req, res) => {
             // 그 중에서 user 객체의 name 속성을 name 으로 변경하는데 하나만 변경하는 것이 아닌 전부 변경한다.
             // comments 속성의 배열값 안의 userFullName 속성의 값을 변경한다.
             // arrayFilters 를 이용하면 배열 객체의 값을 손쉽게 변경할 수 있다.
-            // arrayFilters: [{}] 안의 값이 변경할 내용
+            // { arrayFilters: [{ 'comment.user': userId }] } 안의 값이 변경할 내용이며 comment 는 comments.$[comment].userFullName 의 $[comment] 배열값이다.
             await Promise.all([
                 Blog.updateMany({ 'user._id': userId }, { 'user.name': name }),
                 Blog.updateMany(
