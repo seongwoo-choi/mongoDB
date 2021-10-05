@@ -39,16 +39,17 @@ blogRouter.post('/', async (req, res) => {
 
 blogRouter.get('/', async (req, res) => {
     try {
-        // Blog 데이터베이스에서 20개만 가져온다.
-        // path: "user" => Blog 모델의 user 속성의 값을 채우라는 뜻(user _id 를 채우라는 것)
-        // .populate([{ path: 'user' }, { path: 'comments', populate: {path: user} }]);
-        const blogs = await Blog.find({}).limit(10);
-        // .populate([
-        //     { path: 'user' },
-        //     { path: 'comments', populate: { path: 'user' } },
-        // ]);
-        // populate => Object Id 를 그에 해당하는 객체로 치환해주는 함수이다.
-        // comments 속성을 Object id 를 가지고 객체로 치환 => comments 의 user 속성을 다시 객체로 치환
+        let { page } = req.query;
+        page = parseInt(page);
+        console.log({ page });
+
+        // sort({ updatedAt: -1 }) => updatedAt 내림차순으로 검색
+        // skip(page * 3) => 출력할 데이터의 시작부분을 설정, value 값으로는 생략할 데이터의 갯수
+        // limit(3) => 출력하는 도큐먼트의 갯수를 제한
+        let blogs = await Blog.find({})
+            .sort({ updatedAt: -1 })
+            .skip(page * 3)
+            .limit(3);
 
         return res.send({ blogs });
     } catch (err) {
