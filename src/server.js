@@ -29,7 +29,7 @@ const server = async () => {
         app.listen(3000, async () => {
             console.log('server listening on port 3000');
             // 유저 갯수 / 블로그 갯수 / 후기 갯수
-            // await generateFakeData(3, 5, 10);
+            // await generateFakeData(10, 10, 10);
         });
     } catch (err) {
         console.log(err);

@@ -8,7 +8,7 @@ const UserSchema = new Schema(
             first: { type: String, required: true },
             last: { type: String, required: true },
         },
-        age: Number,
+        age: { type: Number, index: true },
         email: String,
 
         // 도큐먼트가 생성되고 수정되면 자동으로 timestamps 를 찍어준다.
