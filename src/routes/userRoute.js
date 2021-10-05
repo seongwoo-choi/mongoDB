@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { User, Blog } = require('../models');
+const { User, Blog, Comment } = require('../models');
 const mongoose = require('mongoose');
 const userRouter = Router();
 
@@ -60,7 +60,16 @@ userRouter.delete('/:userId', async (req, res) => {
         if (!mongoose.isValidObjectId(userId))
             return res.status(400).send({ err: 'invalid userId' });
         // findOneAndDelete => filter 에 해당하는 도큐먼트를 찾고 삭제한다. 삭제하기 전의 값을 user 에 저장하여 삭제한 값을 확인할 수 있다.
-        const user = await User.findOneAndDelete({ _id: userId });
+        const [user] = await Promise.all([
+            User.findOneAndDelete({ _id: userId }),
+            Blog.deleteMany({ 'user._id': userId }),
+            Blog.updateMany(
+                { 'comments.user': userId },
+                { $pull: { comments: { user: userId } } },
+            ),
+            Comment.deleteMany({ user: userId }),
+        ]);
+
         return res.send({ user });
     } catch (err) {
         console.log(err);
