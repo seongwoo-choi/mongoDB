@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { isValidObjectId } = require('mongoose');
+const { isValidObjectId, startSession, abortTransaction } = require('mongoose');
 const { Blog, User, Comment } = require('../models');
 
 // server 에서 app.use('/blog/:blogId/comment', commentRouter); OR blogRoute 에서 blogRouter.use('/:blogId/comment', commentRouter)
@@ -14,59 +14,81 @@ const { comment } = require('../models/Comment');
 */
 
 commentRouter.post('/', async (req, res) => {
+    const session = await startSession();
+    let comment;
     try {
-        const { blogId } = req.params;
+        await session.withTransaction(async () => {
+            const { blogId } = req.params;
 
-        const { content, userId } = req.body;
-        if (!isValidObjectId(blogId))
-            return res.status(400).send({ err: 'blogId is invalid' });
-        if (!isValidObjectId(userId))
-            return res.status(400).send({ err: 'userId is invalid' });
-        if (typeof content !== 'string')
-            return res.status(400).send({ err: 'content is requried' });
+            const { content, userId } = req.body;
+            if (!isValidObjectId(blogId))
+                return res.status(400).send({ err: 'blogId is invalid' });
+            if (!isValidObjectId(userId))
+                return res.status(400).send({ err: 'userId is invalid' });
+            if (typeof content !== 'string')
+                return res.status(400).send({ err: 'content is requried' });
 
-        const [blog, user] = await Promise.all([
-            Blog.findById(blogId),
-            User.findById(userId),
-        ]);
+            // await 를 두 번 따로 사용하고 있는 데 Promise.all 을 사용하면 한번에 처리가 가능 => 병렬처리를 하기 때문에 성능이 오른다.
+            // const blog = await Blog.findByIdAndUpdate(blogId);
+            // const user = await User.findByIdAndUpdate(userId);
+            const [blog, user] = await Promise.all([
+                Blog.findById(blogId, {}, { session }),
+                User.findById(userId, {}, { session }),
+            ]);
 
-        // await 를 두 번 따로 사용하고 있는 데 Promise.all 을 사용하면 한번에 처리가 가능 => 병렬처리를 하기 때문에 성능이 오른다.
-        // const blog = await Blog.findByIdAndUpdate(blogId);
-        // const user = await User.findByIdAndUpdate(userId);
-        if (!blog || !user)
-            return res.status(400).send({ err: 'blog or user does not exist' });
-        if (!blog.islive)
-            return res.status(400).send({ err: 'blog is not avaliable' });
+            if (!blog || !user)
+                return res
+                    .status(400)
+                    .send({ err: 'blog or user does not exist' });
+            if (!blog.islive)
+                return res.status(400).send({ err: 'blog is not avaliable' });
 
-        // DB 에서 Comment 객체를 생성하여 node.js 에 생성
-        const comment = new Comment({
-            content,
-            user,
-            userFullName: `${user.name.first} ${user.name.last}`,
-            blog,
+            // DB 에서 Comment 객체를 생성하여 node.js 에 생성
+            comment = new Comment({
+                content,
+                user,
+                userFullName: `${user.name.first} ${user.name.last}`,
+                // comment 에 저장할 때는 블로그 아이디를 저장 => 재참조를 계속해서 무한 루프에 빠지는 것을 방지
+                blog: blogId,
+            });
+
+            // 트랜잭션 안에서 실행된 모든 작업들이 취소처리가 된다.
+            // await session.abortTransaction();
+
+            // // 읽기 작업을 빠르게 하기 위한 작업이다..
+            // await Promise.all([
+            //     comment.save(),
+            //     Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }),
+            // ]);
+
+            blog.commentsCount++;
+            // blog 모델의 comments 속성에 comment 를 입력함 => comments 는 comment 모델 객체이고 모델 안에 blog 속성이 있음
+            // 재귀함수처럼 무한히 계속해서 반복됨(무한루프) => 해결법은 blog: blogId 로 값을 명시적으로 나타내면 된다.
+            blog.comments.push(comment);
+
+            // shift => 배열의 맨 처음 값이 사라진다 => 큐라고 생각하면 편할듯
+            if (blog.commentsCount > 3) blog.comments.shift();
+
+            // 자식문서를 내장하는 것이 아닌 가공된 값을 내장한다.
+            await Promise.all([
+                comment.save({ session }),
+                // 이미 세션을 통해 불러왔기 때문에 session 을 넣을 필요가 없다.
+                blog.save(),
+                // Blog.updateOne({ _id: blogId }, { $inc: { commentsCount: 1 } }),
+            ]);
+
+            // await 가 여러번 반복되면 Promise.all([]) 로 묶어서 사용할 수 있다.
+            // await comment.save();
+            // 내장된 데이터를 수정할 수 있는 API 가 mongoose 에 잘 설정되어 있다. ==> $push => 자바스크립트 배열에 값을 추가하는 push 와 비슷한 역할을 한다.
+            // await Blog.updateOne({ _id: blogId }, { $push: { comments: comment } });
         });
-
-        // // 읽기 작업을 빠르게 하기 위한 작업이다..
-        // await Promise.all([
-        //     comment.save(),
-        //     Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }),
-        // ]);
-
-        // 자식문서를 내장하는 것이 아닌 가공된 값을 내장한다.
-        await Promise.all([
-            comment.save(),
-            Blog.updateOne({ _id: blogId }, { $inc: { commentsCount: 1 } }),
-        ]);
-
-        // await 가 여러번 반복되면 Promise.all([]) 로 묶어서 사용할 수 있다.
-        // await comment.save();
-        // 내장된 데이터를 수정할 수 있는 API 가 mongoose 에 잘 설정되어 있다. ==> $push => 자바스크립트 배열에 값을 추가하는 push 와 비슷한 역할을 한다.
-        // await Blog.updateOne({ _id: blogId }, { $push: { comments: comment } });
 
         return res.send({ comment });
     } catch (err) {
         console.log(err);
         return res.status(500).send({ err });
+    } finally {
+        await session.endSession();
     }
 });
 
