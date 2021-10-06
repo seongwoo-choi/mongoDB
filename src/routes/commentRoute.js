@@ -51,7 +51,12 @@ commentRouter.post('/', async (req, res) => {
         //     comment.save(),
         //     Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }),
         // ]);
-        await comment.save();
+
+        // 자식문서를 내장하는 것이 아닌 가공된 값을 내장한다.
+        await Promise.all([
+            comment.save(),
+            Blog.updateOne({ _id: blogId }, { $inc: { commentsCount: 1 } }),
+        ]);
 
         // await 가 여러번 반복되면 Promise.all([]) 로 묶어서 사용할 수 있다.
         // await comment.save();
@@ -67,12 +72,10 @@ commentRouter.post('/', async (req, res) => {
 
 commentRouter.get('/', async (req, res) => {
     try {
-        
         // 쿼리가 입력되지 않았을 때 기본값 0
         let { page = 0 } = req.query;
         page = parseInt(page);
-        console.log({ page });
-        
+
         const { blogId } = req.params;
         if (!isValidObjectId(blogId))
             return res.status(400).send({ err: 'blogId is invalid' });

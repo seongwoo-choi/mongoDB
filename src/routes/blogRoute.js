@@ -2,8 +2,7 @@ const { Router } = require('express');
 const blogRouter = Router();
 const { commentRouter } = require('./commentRoute');
 const { isValidObjectId } = require('mongoose');
-const { User } = require('../models/User');
-const { Blog } = require('../models/Blog');
+const { Blog, User, Comment } = require('../models');
 const path = require('path');
 
 // blog/:blogId/comment => 미들웨어 처리
@@ -63,7 +62,14 @@ blogRouter.get('/:blogId', async (req, res) => {
         if (!isValidObjectId(blogId))
             return res.status(400).send({ err: 'blogId is invalid' });
         // const blog = await Blog.findOne({ _id: blogId });
-        const blog = await Blog.findById(blogId);
+        const blog = await Blog.findOne({ _id: blogId });
+
+        // // 후기의 총 갯수를 세는 로직
+        // // countDocuments() 를 사용하면 문서의 갯수를 셀 수 있다.
+        // const CommentCount = await Comment.find({
+        //     blog: blogId,
+        // }).countDocuments();
+
         return res.send({ blog });
     } catch (err) {
         console.log(err);

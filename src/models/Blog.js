@@ -25,6 +25,9 @@ const BlogSchema = new Schema({
         },
     },
 
+    // 내장
+    commentsCount: { type: Number, default: 0, required: true },
+
     // 이런식으로 외부 스키마를 임포트해와서 넣어줄 수 있다.
     // comments: [CommentSchema],
 });
