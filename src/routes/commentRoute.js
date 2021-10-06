@@ -46,11 +46,12 @@ commentRouter.post('/', async (req, res) => {
             blog,
         });
 
-        // 읽기 작업을 빠르게 하기 위한 작업이다..
-        await Promise.all([
-            comment.save(),
-            Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }),
-        ]);
+        // // 읽기 작업을 빠르게 하기 위한 작업이다..
+        // await Promise.all([
+        //     comment.save(),
+        //     Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }),
+        // ]);
+        await comment.save();
 
         // await 가 여러번 반복되면 Promise.all([]) 로 묶어서 사용할 수 있다.
         // await comment.save();
@@ -66,11 +67,22 @@ commentRouter.post('/', async (req, res) => {
 
 commentRouter.get('/', async (req, res) => {
     try {
+        
+        // 쿼리가 입력되지 않았을 때 기본값 0
+        let { page = 0 } = req.query;
+        page = parseInt(page);
+        console.log({ page });
+        
         const { blogId } = req.params;
         if (!isValidObjectId(blogId))
             return res.status(400).send({ err: 'blogId is invalid' });
 
-        const comments = await Comment.find({ blogId: blogId });
+        // 페이지네이션
+        const comments = await Comment.find({ blogId: blogId })
+            .sort({ createdAt: -1 })
+            .skip(page * 3)
+            .limit(3);
+
         return res.send({ comments });
     } catch (err) {
         console.log(err);

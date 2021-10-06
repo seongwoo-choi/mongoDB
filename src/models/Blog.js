@@ -26,7 +26,7 @@ const BlogSchema = new Schema({
     },
 
     // 이런식으로 외부 스키마를 임포트해와서 넣어줄 수 있다.
-    comments: [CommentSchema],
+    // comments: [CommentSchema],
 });
 
 // user._id, updatedAt 복합키 오름차순 / , { unique: true } => 유일한 값으로 만들 수 있다.

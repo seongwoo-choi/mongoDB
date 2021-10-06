@@ -39,9 +39,8 @@ blogRouter.post('/', async (req, res) => {
 
 blogRouter.get('/', async (req, res) => {
     try {
-        let { page } = req.query;
+        let { page = 0 } = req.query;
         page = parseInt(page);
-        console.log({ page });
 
         // sort({ updatedAt: -1 }) => updatedAt 내림차순으로 검색
         // skip(page * 3) => 출력할 데이터의 시작부분을 설정, value 값으로는 생략할 데이터의 갯수
