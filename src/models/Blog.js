@@ -32,6 +32,9 @@ const BlogSchema = new Schema({
 // user._id, updatedAt 복합키 오름차순 / , { unique: true } => 유일한 값으로 만들 수 있다.
 BlogSchema.index({ 'user._id': 1, updatedAp: 1 });
 
+// 텍스트 인덱스는 컬렉션 당 하나만 만들 수 있다.
+BlogSchema.index({ title: 'text', content: 'text' });
+
 // BlogSchema 에 가상의 comments 속성을 생성
 // BlogSchema.virtual('comments', {
 //     // comments 컬렉션을 참조하는 속성이고
