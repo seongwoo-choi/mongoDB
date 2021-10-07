@@ -24,6 +24,12 @@ const server = async () => {
         // middleWare
         app.use(express.json());
 
+        app.use('/', async (req, res) => {
+            return res.send({
+                api: 'blog api start : /user & /blog & /:blogId/comment',
+            });
+        });
+
         // /user 로 시작하면 userRouter 로 연결한다.
         app.use('/user', userRouter);
         app.use('/blog', blogRouter);
