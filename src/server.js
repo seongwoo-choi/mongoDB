@@ -6,9 +6,10 @@ const { generateFakeData } = require('../faker2');
 
 const server = async () => {
     try {
-        const { MONGO_URI } = process.env;
+        const { MONGO_URI, PORT } = process.env;
 
         if (!MONGO_URI) throw new Error('MONGO_URI is required');
+        if (!PORT) throw new Error('PORT is Required');
 
         await mongoose.connect(MONGO_URI, {
             useNewUrlParser: true,
@@ -29,8 +30,8 @@ const server = async () => {
 
         // app.use('/blog/:blogId/comment', commentRouter);
 
-        app.listen(3000, async () => {
-            console.log('server listening on port 3000');
+        app.listen(PORT, async () => {
+            console.log(`server listening on port ${PORT}`);
             // 유저 갯수 / 블로그 갯수 / 후기 갯수
             // await generateFakeData(10, 2, 10);
         });
